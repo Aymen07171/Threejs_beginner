@@ -7,6 +7,9 @@ const ThreeScene = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
+    // Safety check to ensure mountRef is available
+    if (!mountRef.current) return;
+
     // Create scene, camera and renderer
     const scene = new THREE.Scene();
 
@@ -27,9 +30,9 @@ const ThreeScene = () => {
     light.position.set(0, 10, 10);
     scene.add(light);
     
-    // // Add ambient light
-    // const ambientLight = new THREE.AmbientLight(0x404040);
-    // scene.add(ambientLight);
+    // Add ambient light
+    const ambientLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambientLight);
 
     // Create some geometry
     const geometry = new THREE.SphereGeometry(3, 64, 64);
@@ -41,16 +44,22 @@ const ThreeScene = () => {
     // Add the mesh to the scene
     scene.add(mesh);
 
+    // Create renderer
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(sizes.width, sizes.height);
 
-    // Add the renderer to the DOM
-    document.body.appendChild(renderer.domElement);
-    
-    // Add OrbitControls - THIS IS THE FIX:
-    // Use renderer.domElement instead of mountRef.current
+    // Add the renderer to the mountRef instead of document.body
+    mountRef.current.appendChild(renderer.domElement);
+
+    // Add OrbitControls - now using renderer.domElement which is inside mountRef
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+    controls.enablePan = false;
+    controls.enableZoom = false;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.5;
+    controls.dampingFactor = 0.1;
+    controls.rotateSpeed = 0.5;
 
     // Create an animation loop to continuously render
     const animate = () => {
@@ -84,13 +93,23 @@ const ThreeScene = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       controls.dispose(); // Properly dispose controls
-      if (renderer.domElement && renderer.domElement.parentNode) {
-        renderer.domElement.parentNode.removeChild(renderer.domElement);
+      
+      // Make sure mountRef is still available during cleanup
+      if (mountRef.current) {
+        // Remove renderer from mountRef
+        if (renderer.domElement && renderer.domElement.parentNode) {
+          renderer.domElement.parentNode.removeChild(renderer.domElement);
+        }
       }
     };
   }, []);
 
-  return <div ref={mountRef}  />;
+  return (
+    <div className='absolute top-0 left-0 z-1'>
+      {/* <h1 className="text-red-500 absolute top-5 left-1/2 transform -translate-x-1/2">Give it a spin</h1> */}
+      <div ref={mountRef}  />
+    </div>
+  );
 };
 
 export default ThreeScene;
