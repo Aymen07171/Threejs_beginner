@@ -34,6 +34,7 @@ const ThreeScene = () => {
     // Lighting
     const light = new THREE.PointLight(0xffffff, 500, 500);
     light.position.set(0, 10, 10);
+    // light.intensity = 1.2;
     scene.add(light);
 
     const ambientLight = new THREE.AmbientLight(0x404040);
@@ -41,7 +42,7 @@ const ThreeScene = () => {
 
     // Geometry and material
     const geometry = new THREE.SphereGeometry(3, 64, 64);
-    const material = new THREE.MeshStandardMaterial({ color: "#00ff83" });
+    const material = new THREE.MeshStandardMaterial({ color: "#00ff83", roughness: 0.5, metalness: 0.5 });
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
