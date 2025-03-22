@@ -1,5 +1,6 @@
-import ThreeScene from "./Components/Threescene"
+// import ThreeScene from "./Components/Threescene"
 import Header from "./Components/Header"
+import ContainerScene from "./Components/ContainerScene"
 
 
 function App() {
@@ -8,8 +9,8 @@ function App() {
   
     <div className="App">
       
-      <ThreeScene />
       <Header />
+      <ContainerScene />  
 
     </div>
   )
