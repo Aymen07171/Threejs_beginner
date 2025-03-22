@@ -2,7 +2,7 @@ import React from 'react';
 
 const Header = () => {
     return (
-        <header className='text-white z-20 relative flex justify-between items-center px-8 '>
+        <header className='text-white z-20 relative flex justify-between items-center px-8 pt-8 '>
             <h1 className='text-2xl font-bold'>3D Circle</h1>
             <nav>
                 <ul className='flex gap-6'>
